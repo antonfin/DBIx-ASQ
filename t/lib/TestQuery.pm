@@ -61,11 +61,57 @@ our @sql_and_params = (
     # not end
     [ q/select * from books where title not like '%er'/,
         [ 'books', '*', { 'title not end' => 'er' } ], 'id' ],
+
+    # limit, order, offset and other
+    [ 'select * from books', [{ table => 'books' }], 'id' ],
+    [ 'select * from books order by title', [{ table => 'books', sortby => 'title' }], 'id' ],
+    [ 'select * from books order by title asc', [{ table => 'books', sortby => 'title', order => 'asc' }], 'id' ],
+    [ 'select * from books order by title desc', [{ table => 'books', sortby => 'title', 'order' => 'desc' }], 'id' ],
+    [ 'select * from books order by title desc limit 3', [{ table => 'books', sortby => 'title', 'order' => 'desc', limit => 3 }], 'id' ],
+    [ 'select * from books order by title desc limit 3 offset 1', [{ table => 'books', sortby => 'title', 'order' => 'desc', limit => 3, offset => 1 }], 'id' ],
+    [ 'select id, title from books order by title desc limit 3 offset 1', [{ table => 'books', sortby => 'title', 'order' => 'desc', limit => 3, offset => 1, fields => ['id', 'title'] }], 'id' ],
+    [ 'select * from authors', [{ table => 'authors' }], 'id' ],
+    [ 'select * from authors limit 1', [{ table => 'authors', limit => 1 }], 'id' ],
+    [ 'select id from authors', [{ table => 'authors', fields => 'id' }], 'id' ],
+    [ 'select name from authors', [{ table => 'authors', fields => 'name' }], 'name' ],
+    [ 'select id, name from authors', [{ table => 'authors', fields => 'id, name' }], 'id' ],
+    [ 'select id, name from authors', [{ table => 'authors', fields => [ 'id', 'name' ] }], 'id' ],
+    [ 'select id, name from authors', [{ table => 'authors', fields => ['id', undef, 'name', ''] }], 'id' ],
+    [ 'select * from authors', [{ table => 'authors', fields => [] }], 'id' ],
+    [ 'select * from authors limit 1', [{ table => 'authors', fields => [], limit => 1 }], 'id' ],
+    [ 'select * from authors where id = 1', [{ table => 'authors', fields => undef, where => { id => 1 } }], 'id' ],
+    [ 'select id, name from authors where id = 1', [{ table => 'authors', fields => ['id', 'name'], where => { id => 1 } }], 'id' ],
+    [ 'select * from authors where id = 1', [{ 
+            table => 'authors', where => 'id = 1' }], 'id' ],
+    [ 'select id, name from authors where id = 1', [{ table => 'authors', fields => ['id', 'name'], where => 'id = 1' }], 'id' ],
+    [ 'select * from books where id > 3', [{ table => 'books', fields => undef, where => 'id > 3' }], 'id' ],
+    [ 'select * from books limit 4', [{ table => 'books', limit => 4 }], 'id' ],
+    [ 'select * from books limit 1, 3', [{ table => 'books', limit => 3, offset => 1 }], 'id' ],
+    [ 'select * from books where id > 1 limit 2 offset 2', [{ table => 'books', limit => 2, offset => 2, where => 'id>1' }], 'id' ],
+    [ q/select id, title, year from books where title = 'Adventure' and year = 1911/, [{ 
+            table   => 'books',
+            fields  => ['id', 'title', 'year'], 
+            where   => { title => 'Adventure', year => 1911 } 
+        } ], 'id' ],
 );
 
 our @INSERT = (
-    [ 'books',      { title => 'That Spot', year => 1908, author_id => 1 } ], 
-    [ 'authors',    { name => 'Ernest Miller Hemingway', description => 'Was an American author and journalist' } ],
+    [
+        'books',
+        { title => 'That Spot', year => 1908, author_id => 1 },
+        [
+            { title => 'THAT SPOT' },
+            { title => 'That Spot!!!', year => 1909 }
+        ]
+    ],
+    [
+        'authors',
+        { name => 'Ernest Miller Hemingway', description => 'Was an American author and journalist' },
+        [
+            { name => 'Ernest Hemingway' },
+            { name => 'Ernest Miller Hemingway', description => 'American writer and journalist' }
+        ]
+    ],
 );
 
 1;

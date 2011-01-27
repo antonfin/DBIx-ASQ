@@ -13,13 +13,14 @@ my $dep_modules = {
 };
 
 WriteMakefile(
-    NAME	        => 'DBIx::ASQ',
-    VERSION_FROM    => 'ASQ.pm', # finds $VERSION
-    PREREQ_PM       => { %$dep_modules },
-    AUTHOR          => 'Anton Morozov <anton@antonfin.kiev.ua>',
-    ABSTRACT        => 'DBI extension for abstract and simple sql queries',
-    LICENSE         => 'artistic_2',
-    test            => { TESTS => 't/*.t' },
+    NAME	    => 'DBIx::ASQ',
+    VERSION_FROM=> 'ASQ.pm', # finds $VERSION
+    PREREQ_PM   => { %$dep_modules },
+    AUTHOR      => 'Anton Morozov <anton@antonfin.kiev.ua>',
+    ABSTRACT    => 'DBI extension for abstract and simple sql queries',
+    LICENSE     => 'artistic_2',
+    test        => { TESTS => 't/*.t' },
+    clean       => { FILES => 't/lib/test*' },
 );
 
 1;

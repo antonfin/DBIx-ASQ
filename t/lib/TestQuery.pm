@@ -63,6 +63,11 @@ our @sql_and_params = (
         [ 'books', '*', { 'title not end' => 'er' } ], 'id' ],
 );
 
+our @INSERT = (
+    [ 'books',      { title => 'That Spot', year => 1908, author_id => 1 } ], 
+    [ 'authors',    { name => 'Ernest Miller Hemingway', description => 'Was an American author and journalist' } ],
+);
+
 1;
 
 __END__

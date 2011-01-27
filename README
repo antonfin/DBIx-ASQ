@@ -1,0 +1,26 @@
+DBIx::Abstract
+--------------
+DBI extension for abstract and simple sql queries
+Today work with MySQL, Postgres and SQLite
+
+COPYRIGHT
+---------
+Copyright 2010-2011 by the Anton Morozov (antonfin)
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+PREREQUISITES
+-------------
+DBI
+
+HOW TO BUILD
+------------
+perl Makefile.PL
+make
+make test
+
+HOW TO INSTALL
+--------------
+make install
+

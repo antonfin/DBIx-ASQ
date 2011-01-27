@@ -1,7 +1,7 @@
 #
 #===============================================================================
 #
-#  DESCRIPTION:  fetch data from DB (fetchall_arrayref)
+#  DESCRIPTION:  fetch data from DB (fetchall_hashref)
 #
 #        FILES:  ---
 #         BUGS:  ---
@@ -39,13 +39,13 @@ my @sql_and_params = (
             ['id', 'title', 'year'], { title => 'Adventure', year => 1911 } ], 'id' ],
 );
 
-plan tests => 1 + 4 * @sql_and_params;
+plan tests => 1 + 3 * @sql_and_params;
 
 # create sqlite db for test
 my $_dbh = TestDB->create( 'sqlite' );
 
 my $sqlite_db = $_dbh->file;
-
+ 
 # delete sqlite file before finish
 $SIG{__DIE__} = sub{ $_dbh->drop; warn $_[0]; exit; };
 
@@ -61,16 +61,16 @@ foreach my $query ( @sql_and_params ) {
     my $sth = $_dbh->prepare( $query->[0] );
 
     $sth->execute;
-    my $_list_arr  = $sth->fetchall_arrayref();
+    my $_list_hr   = $sth->fetchall_hashref( $query->[2] );
     
     #   TESTING
 
-    # test fetchall_arrayref
-    my $list_arr = $db->select( @{$query->[1]} )->fetchall_arrayref;
-    ok ( $list_arr,                         $i . ' Must be exists'          );
-    is ( ref $list_arr, 'ARRAY',            $i . ' Must be array ref'       );
-    is ( ref $list_arr->[0], 'ARRAY',       $i . ' Elements must be arrays' );
-    ok( eq_array( $list_arr, $_list_arr ),  $i . ' Must be equal'           );
+    # test fetchall_hashref
+    my $list_hr = $db->select( @{$query->[1]} )->fetchall_hashref( $query->[2] );
+    ok ( $list_hr,                      $i . ' Must be not empty'   );
+    is ( ref $list_hr, 'HASH',          $i . ' Must be hash ref'    );
+    ok( eq_hash( $list_hr, $_list_hr ), $i . ' Must be equal'       );
+
 }
 
 # delete sqlite db

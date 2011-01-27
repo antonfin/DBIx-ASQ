@@ -1,4 +1,4 @@
-DBIx::Abstract
+DBIx::ASQ
 --------------
 DBI extension for abstract and simple sql queries
 Today work with MySQL, Postgres and SQLite

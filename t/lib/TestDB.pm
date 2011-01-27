@@ -27,11 +27,18 @@ T2
 my @inserts = (
     q/insert into authors (name, description) values ('Jack London', 'American author, journalist, and social activist')/,
     q/insert into authors (name, description) values ('Richard David Bach', 'American writer. He is widely known as the author of the hugely popular 1970s best-sellers Jonathan Livingston Seagull, Illusions: The Adventures of a Reluctant Messiah, and others.')/,
+
     q/insert into books (title, author_id, year ) values ('The Sea-Wolf', 1, 1904)/,
+    q/insert into books (title, author_id, year ) values ('The Iron Heel', 1, 1908)/,
     q/insert into books (title, author_id, year ) values ('Adventure', 1, 1911)/,
+    q/insert into books (title, author_id, year ) values ('The Scarlet Plague', 1, 1912)/,
+    q/insert into books (title, author_id, year ) values ('A Son of the Sun', 1, 1912)/,
     q/insert into books (title, author_id, year ) values ('The Star Rover', 1, 1915)/,
     q/insert into books (title, author_id, year ) values ('Hearts of Three', 1, 1920)/,
+
     q/insert into books (title, description, author_id, year) values ('Jonathan Livingston Seagull', 'is a fable in novella form about a seagull learning about life and flight', 2, 1970)/,
+    q/insert into books (title, description, author_id, year) values ('The Bridge Across Forever', 'A Love Story', 2, 1984)/,
+    q/insert into books (title, author_id, year) values ('Out of My Mind', 2, 2000)/,
 );
 
 my @sqlite_db_standart = ( $sqlite_db_standart_t1, $sqlite_db_standart_t2, @inserts );

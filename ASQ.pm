@@ -11,16 +11,19 @@ our ($VERSION, $AUTOLOAD);
 
 $VERSION = 0.01;
 
+# {} - conjunction - logic "and"
+# [] - disjunction - logic "or"
+
 my %CACHE;
 
 {
     my %op = ( 
-        ' like'         => [ 'like',        '%',    '%' ], 
-        ' not like'     => [ 'not like',    '%',    '%' ], 
-        ' begin'        => [ 'like',        '',     '%' ], 
-        ' not begin'    => [ 'not like',    '',     '%' ], 
-        ' end'          => [ 'like',        '%',    ''  ], 
-        ' not end'      => [ 'not like',    '%',    ''  ], 
+        ' like'         => [ 'like',        '%',    '%' ],
+        ' not like'     => [ 'not like',    '%',    '%' ],
+        ' begin'        => [ 'like',        '',     '%' ],
+        ' not begin'    => [ 'not like',    '',     '%' ],
+        ' end'          => [ 'like',        '%',    ''  ],
+        ' not end'      => [ 'not like',    '%',    ''  ],
     );
     sub _where($$) { 
         my ($self, $where) = @_;
@@ -28,7 +31,7 @@ my %CACHE;
         my $where_str = '';
         if ( $where ) {
             $where_str = ref $where
-            ? " WHERE " . join( ' and ' => 
+            ? ' WHERE ' . join( ' AND ' =>
                 (map {
                     my $str;
                     if ( /\s*(\w+)\s*([=<>]{1,2}| (not )?(like|begin|end))\s*/ ) {
@@ -94,7 +97,7 @@ sub new {
     my ( $class, $dsn ) = (shift, shift);
     my $user        = $_[0] || '';
     my $password    = $_[1] || '';
-    my $attr        = $_[2];
+    my $attr        = $_[2] || { RaiseError => 1, AutoCommit => 1, PrintError => 0 };
 
     unless ( $CACHE{ "${dsn}_$user" } ) {
         

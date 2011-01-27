@@ -1,7 +1,7 @@
 #
 #===============================================================================
 #
-#  DESCRIPTION:  open and close DB
+#  DESCRIPTION:  close DB
 #
 #        FILES:  ---
 #         BUGS:  ---
@@ -14,7 +14,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use DBIx::ASQ;
 
 use FindBin qw/$Bin/;
@@ -29,11 +29,14 @@ my $sqlite_db = $_dbh->file;
 
 my $db = DBIx::ASQ->new( "SQLite:dbname=$sqlite_db" );
 
-ok ( $db, 'DB object exists' );
-is ( ref $db, 'DBIx::ASQ', 'Db is object' );
-
 # close db
-$db->disconnect();
+ok( $db->disconnect(), 'Disconnect' );
+
+my $res = eval {
+    $db->select('books')->fetchall;
+};
+ok ( !$res, 'No result' );
+ok ( $@, 'Must be die' );
 
 # delete sqlite db
 $_dbh->drop();

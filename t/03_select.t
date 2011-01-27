@@ -22,7 +22,7 @@ use lib "$Bin/lib";
 use TestDB;
 
 # create sqlite db for test
-my $_dbh = TestDB->new_db( 'sqlite' );
+my $_dbh = TestDB->create( 'sqlite' );
 
 $_dbh->disconnect();
 

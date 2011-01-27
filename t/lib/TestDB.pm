@@ -6,7 +6,7 @@ use warnings;
 use DBI;
 use File::Basename 'dirname';
 
-my $sqlite_db_standart_t1 = <<T1;
+my $sqlite_db_standart_t1 = <<'T1';
     create table books(
         id INTEGER PRIMARY KEY,
         title  VARCHAR(128) NOT NULL,
@@ -16,7 +16,7 @@ my $sqlite_db_standart_t1 = <<T1;
     );
 T1
 
-my $sqlite_db_standart_t2 = <<T2;
+my $sqlite_db_standart_t2 = <<'T2';
     create table authors (
         id INTEGER PRIMARY KEY,
         name VARCHAR(128) NOT NULL,
@@ -25,18 +25,18 @@ my $sqlite_db_standart_t2 = <<T2;
 T2
 
 my @inserts = (
-    "insert into authors (name, description) values ('Jack London', 'American author, journalist, and social activist')",
-    "insert into authors (name, description) values ('Richard David Bach', 'American writer. He is widely known as the author of the hugely popular 1970s best-sellers Jonathan Livingston Seagull, Illusions: The Adventures of a Reluctant Messiah, and others.')",
-    "insert into books (title, author_id, year ) values ('The Sea-Wolf', 1, 1904)",
-    "insert into books (title, author_id, year ) values ('Adventure', 1, 1911)",
-    "insert into books (title, author_id, year ) values ('The Star Rover', 1, 1915)",
-    "insert into books (title, author_id, year ) values ('Hearts of Three', 1, 1920)",
-    "insert into books (title, description, author_id, year) values ('Jonathan Livingston Seagull', 'is a fable in novella form about a seagull learning about life and flight', 2, 1970)"
+    q/insert into authors (name, description) values ('Jack London', 'American author, journalist, and social activist')/,
+    q/insert into authors (name, description) values ('Richard David Bach', 'American writer. He is widely known as the author of the hugely popular 1970s best-sellers Jonathan Livingston Seagull, Illusions: The Adventures of a Reluctant Messiah, and others.')/,
+    q/insert into books (title, author_id, year ) values ('The Sea-Wolf', 1, 1904)/,
+    q/insert into books (title, author_id, year ) values ('Adventure', 1, 1911)/,
+    q/insert into books (title, author_id, year ) values ('The Star Rover', 1, 1915)/,
+    q/insert into books (title, author_id, year ) values ('Hearts of Three', 1, 1920)/,
+    q/insert into books (title, description, author_id, year) values ('Jonathan Livingston Seagull', 'is a fable in novella form about a seagull learning about life and flight', 2, 1970)/,
 );
 
 my @sqlite_db_standart = ( $sqlite_db_standart_t1, $sqlite_db_standart_t2, @inserts );
 
-sub new_db {
+sub create {
     my ( $class, $type, $db, $user, $pwd ) = @_;
 
     my $dbh;
@@ -44,14 +44,12 @@ sub new_db {
     if ( $_type eq 'sqlite' ) {
 
         unless ( $db ) {
-            my $tmp_dir = dirname( __FILE__ );
-            $db  =  $tmp_dir . '/test.db';
+            $db = dirname( __FILE__ ) . '/test' . rand(99999) . '.db';
+            unlink( $db ) or die $! if -f $db;
         }
 
-        unlink( $db ) or die $! if -f $db;
-
-        $dbh = DBI->connect( "dbi:SQLite:dbname=$db", "", "" );
-        $dbh->do( $_ ) or warn $dbh->errstr . "\n" for @sqlite_db_standart;
+        $dbh = DBI->connect( "dbi:SQLite:dbname=$db", '', '', { PrintError => 1 } );
+        $dbh->do( $_ ) for @sqlite_db_standart;
     }
     
     bless { dbh => $dbh, db => $db, user => $user, pwd => $pwd, type => $_type } => $class;
@@ -80,6 +78,7 @@ sub disconnect {
     my $self = shift;
     my $dbh = delete( $self->{dbh} );
     $dbh->disconnect();
+    return $self;
 }
 
 sub drop {
@@ -93,7 +92,7 @@ __END__
 
 =head1 NAME
 
-TestDB.pm - module for help DB testing
+TestDB.pm - module for help DBIx::ASQ testing
 
 =head1 VERSION
 

@@ -34,7 +34,7 @@ my %CACHE;
             ? ' WHERE ' . join( ' AND ' =>
                 (map {
                     my $str;
-                    if ( /\s*(\w+)\s*([=<>]{1,2}| (not )?(like|begin|end))\s*/ ) {
+                    if ( /\s*([\w\.]+)\s*([=<>]{1,2}| (not )?(like|begin|end))\s*/ ) {
                         if ( length $2 < 3 ) { $str = "$1 $2 ?" }
                         else {
                             $str = "$1 $op{$2}[0] ?";
